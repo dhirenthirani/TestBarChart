@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         
         self.navigationItem.title = "Bar Chart"
         
-        let barchart = BarChart(frame: CGRect(x: 0, y: 100, width: self.view.frame.height, height: self.view.frame.size.height - 200))
+        let barchart = BarChart(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.size.height - 200))
         barchart.dataSource = self
         barchart.drawGraph()
         self.view.addSubview(barchart)

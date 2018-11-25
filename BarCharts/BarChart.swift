@@ -125,12 +125,15 @@ class BarChart: UIView {
         createYAxisLine()
         createBarGraph()
         
+        self.graphView?.setNeedsDisplay()
         self.scrollView?.addSubview(self.graphView!)
         
+        self.scrollView?.setNeedsDisplay()
         self.addSubview(self.scrollView!)
-        self.scrollView?.contentSize = CGSize(width: graphWidth + width, height: Double(height))
+        self.scrollView?.contentSize = CGSize(width: graphWidth + 2*PADDING_20, height: Double(height))
         
         self.createLegendView(height: legendHeight)
+        self.setNeedsDisplay()
     }
     
     private func createLegendView(height: CGFloat) {
