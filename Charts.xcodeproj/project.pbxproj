@@ -15,6 +15,8 @@
 		C18217B621A92EFA00941B41 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C18217B421A92EFA00941B41 /* LaunchScreen.storyboard */; };
 		C18217C121A92EFB00941B41 /* ChartsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18217C021A92EFB00941B41 /* ChartsTests.swift */; };
 		C18217CC21A92EFB00941B41 /* ChartsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18217CB21A92EFB00941B41 /* ChartsUITests.swift */; };
+		C18217DB21A92F6B00941B41 /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18217DA21A92F6B00941B41 /* BarChart.swift */; };
+		C1BFC7FF21AAC04B00162498 /* CustomScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BFC7FE21AAC04B00162498 /* CustomScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		C18217C721A92EFB00941B41 /* ChartsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChartsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18217CB21A92EFB00941B41 /* ChartsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsUITests.swift; sourceTree = "<group>"; };
 		C18217CD21A92EFB00941B41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C18217DA21A92F6B00941B41 /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
+		C1BFC7FE21AAC04B00162498 /* CustomScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,7 @@
 		C182179C21A92EFA00941B41 = {
 			isa = PBXGroup;
 			children = (
+				C18217D921A92F4B00941B41 /* BarCharts */,
 				C18217A721A92EFA00941B41 /* Charts */,
 				C18217BF21A92EFB00941B41 /* ChartsTests */,
 				C18217CA21A92EFB00941B41 /* ChartsUITests */,
@@ -126,6 +131,15 @@
 				C18217CD21A92EFB00941B41 /* Info.plist */,
 			);
 			path = ChartsUITests;
+			sourceTree = "<group>";
+		};
+		C18217D921A92F4B00941B41 /* BarCharts */ = {
+			isa = PBXGroup;
+			children = (
+				C18217DA21A92F6B00941B41 /* BarChart.swift */,
+				C1BFC7FE21AAC04B00162498 /* CustomScrollView.swift */,
+			);
+			path = BarCharts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,9 +273,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C18217DB21A92F6B00941B41 /* BarChart.swift in Sources */,
 				C18217AB21A92EFA00941B41 /* ViewController.swift in Sources */,
 				C18217A921A92EFA00941B41 /* AppDelegate.swift in Sources */,
 				C18217B121A92EFA00941B41 /* Charts.xcdatamodeld in Sources */,
+				C1BFC7FF21AAC04B00162498 /* CustomScrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
