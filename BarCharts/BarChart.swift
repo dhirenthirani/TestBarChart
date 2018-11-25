@@ -200,8 +200,8 @@ class BarChart: UIView {
                 layer.strokeColor = chart.barColor?.cgColor
                 layer.fillColor = chart.barColor?.cgColor
                 layer.fillRule = .evenOdd
-                layer.opacity = 0.7
-                layer.lineWidth = 0.5
+                layer.opacity = 0.9
+                layer.lineWidth = 0
                 layer.shadowColor = UIColor.clear.cgColor
                 layer.shadowRadius = 0
                 layer.shadowOpacity = 0
@@ -209,26 +209,26 @@ class BarChart: UIView {
 
                 CATransaction.begin()
                 
-                let animation1 = CABasicAnimation(keyPath: "bounds.size.height")
+                let animation1 = CABasicAnimation(keyPath: "strokeEnd")
                 animation1.fromValue = 0
                 animation1.toValue = endPoint.y
-                
-                let animation = CABasicAnimation(keyPath: "fillColor")
-                animation.fromValue = UIColor.clear.cgColor
-                animation.toValue = chart.barColor?.cgColor
-                
+                animation1.duration = 1
+                animation1.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+                animation1.fillMode = CAMediaTimingFillMode.both
+                animation1.isRemovedOnCompletion = false
+
                 let animation2 = CABasicAnimation(keyPath: "path")
-                animation.fromValue = startPoint
-                animation.toValue = endPoint
+                animation2.fromValue = UIColor.clear.cgColor
+                animation2.toValue = chart.barColor?.cgColor
+                animation2.duration = 1
+                animation2.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+                animation2.fillMode = CAMediaTimingFillMode.both
+                animation2.isRemovedOnCompletion = false
                 
                 let group = CAAnimationGroup()
-                group.animations = [animation, animation1, animation2]
-                group.duration = 1
-                group.fillMode = .both
-                group.isRemovedOnCompletion = false
-                group.beginTime = CACurrentMediaTime()
-                group.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                layer.add(group, forKey: "animate")
+                group.animations = [animation1, animation2]
+                
+                layer.add(group, forKey: "animation")
                 
                 CATransaction.commit()
                 
@@ -240,7 +240,7 @@ class BarChart: UIView {
         }
     }
 
-    
+    // MARK: Draw Line
     private func drawLineForGrid(startPoint: CGPoint, endPoint: CGPoint, text: String, textFrame: CGRect, shouldDraw: Bool = true) {
         if shouldDraw {
             let shapeLayer = CAShapeLayer()
@@ -263,6 +263,7 @@ class BarChart: UIView {
         self.graphView?.layer.addSublayer(textLayer)
     }
     
+    // MARK: Draw Path
     private func drawPath(startPoint: CGPoint, endPoint: CGPoint) -> UIBezierPath {
         let path = UIBezierPath()
         path.move(to: startPoint)
@@ -280,6 +281,13 @@ class BarChart: UIView {
         path.stroke()
         
         return path
+    }
+    
+    func reloadGraph() {
+        self.scrollView?.removeFromSuperview()
+        self.legend?.removeFromSuperview()
+        
+        self.drawGraph()
     }
 }
 
@@ -311,7 +319,7 @@ extension BarChart: UIScrollViewDelegate {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let layer = touchedLayer {
-            layer.opacity = 0.7
+            layer.opacity = 0.9
             layer.shadowRadius = 0
             layer.shadowColor = UIColor.clear.cgColor
             layer.shadowOpacity = 0
@@ -321,7 +329,7 @@ extension BarChart: UIScrollViewDelegate {
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let layer = touchedLayer {
-            layer.opacity = 0.7
+            layer.opacity = 0.9
             layer.shadowRadius = 0
             layer.shadowColor = UIColor.clear.cgColor
             layer.shadowOpacity = 0
@@ -331,7 +339,7 @@ extension BarChart: UIScrollViewDelegate {
     
 //    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        if let layer = touchedLayer {
-//            layer.opacity = 0.7
+//            layer.opacity = 0.9
 //            layer.shadowRadius = 0
 //            layer.shadowColor = UIColor.clear.cgColor
 //            layer.shadowOpacity = 0
