@@ -113,7 +113,7 @@ class BarChart: UIView {
 
         let graphWidth = (Double(self.xAxisArray.count) * stepX) + xOffset
         
-        self.graphView = UIView(frame: CGRect(x: 0.0, y: PADDING_10, width: graphWidth, height: height - 2*PADDING_20))
+        self.graphView = UIView(frame: CGRect(x: 0.0, y: PADDING_20, width: graphWidth, height: height - 3*PADDING_20))
         self.graphView?.isUserInteractionEnabled = true
         
         createXAxisLine()
@@ -128,7 +128,7 @@ class BarChart: UIView {
 
         self.addSubview(self.scrollView!)
 
-        self.scrollView?.contentSize = CGSize(width: graphWidth + 2*PADDING_20, height: Double(height))
+        self.scrollView?.contentSize = CGSize(width: graphWidth + width, height: Double(height))
         self.setNeedsDisplay()
     }
     
@@ -193,6 +193,7 @@ class BarChart: UIView {
                 layer.strokeColor = chart.barColor?.cgColor
                 layer.fillColor = chart.barColor?.cgColor
                 layer.fillRule = .evenOdd
+                layer.opacity = 0.7
                 layer.lineWidth = 0.5
                 layer.shadowColor = UIColor.clear.cgColor
                 layer.shadowRadius = 0
@@ -251,18 +252,94 @@ class BarChart: UIView {
 
 extension BarChart: UIScrollViewDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let point: CGPoint = touches.first?.location(in: self.graphView) ?? CGPoint.zero
         
+        if self.graphView?.frame.contains(point) ?? false {
+            let layers = self.graphView?.layer.hitTest(point)
+            for layer in (layers?.sublayers)! {
+                if layer.isMember(of: CAShapeLayer.self) {
+                    let shapeLayer = (layer as! CAShapeLayer)
+                    if shapeLayer.path?.contains(point) ?? false {
+                        shapeLayer.opacity = 1
+                        shapeLayer.shadowRadius = 10
+                        shapeLayer.shadowColor = UIColor.black.cgColor
+                        shapeLayer.shadowOpacity = 1
+                        
+                        touchedLayer = shapeLayer
+                        
+                        let data = touchedLayer?.value(forKey: "data") as? Double ?? 0.0
+                    
+                        self.showMarker(data: "\(round(data))")
+                    }
+                }
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if let layer = touchedLayer {
+            layer.opacity = 0.7
+            layer.shadowRadius = 0
+            layer.shadowColor = UIColor.clear.cgColor
+            layer.shadowOpacity = 0
+        }
+        dataShapeLayer?.removeFromSuperlayer()
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if let layer = touchedLayer {
+            layer.opacity = 0.7
+            layer.shadowRadius = 0
+            layer.shadowColor = UIColor.clear.cgColor
+            layer.shadowOpacity = 0
+        }
+        dataShapeLayer?.removeFromSuperlayer()
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        if let layer = touchedLayer {
+//            layer.opacity = 0.7
+//            layer.shadowRadius = 0
+//            layer.shadowColor = UIColor.clear.cgColor
+//            layer.shadowOpacity = 0
+//        }
+//        dataShapeLayer?.removeFromSuperlayer()
+//    }
+//
+    func showMarker(data: String) {
+        let rect = touchedLayer?.path?.boundingBox
         
+        let string = NSString(string: data)
+        let size = string.size(withAttributes: [NSAttributedString.Key.font : self.FONT])
+        
+        let path = UIBezierPath(roundedRect: CGRect(x: Double(rect?.origin.x ?? 0), y: (Double(rect?.origin.y ?? 0) - Double(size.height)), width:Double(size.width) + 2*PADDING_10, height: Double(size.height)), cornerRadius: 3)
+        path.close()
+        path.stroke()
+        
+        dataShapeLayer = CAShapeLayer()
+        dataShapeLayer?.path = path.cgPath
+        dataShapeLayer?.strokeColor = UIColor.white.cgColor
+        dataShapeLayer?.backgroundColor = UIColor.white.cgColor
+        dataShapeLayer?.fillColor = UIColor.white.cgColor
+        dataShapeLayer?.fillRule = .evenOdd
+        dataShapeLayer?.lineWidth = 3
+        dataShapeLayer?.shadowColor = UIColor.black.cgColor
+        dataShapeLayer?.shadowRadius = 5
+        dataShapeLayer?.shadowOpacity = 1
+        
+        let textLayer = CATextLayer()
+        textLayer.font = self.FONT as CFTypeRef
+        textLayer.fontSize = self.FONT_SIZE
+        textLayer.frame = path.cgPath.boundingBox
+        textLayer.string = data
+        textLayer.alignmentMode = .center
+        textLayer.backgroundColor = UIColor.clear.cgColor
+        textLayer.foregroundColor = self.TEXT_COLOR.cgColor
+        textLayer.shouldRasterize = true
+        textLayer.rasterizationScale = UIScreen.main.scale
+        textLayer.contentsScale = UIScreen.main.scale
+        dataShapeLayer!.addSublayer(textLayer)
+        
+        self.graphView?.layer.addSublayer(dataShapeLayer!)
     }
 }

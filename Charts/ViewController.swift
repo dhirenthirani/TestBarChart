@@ -49,7 +49,7 @@ extension ViewController: BarChartDataSource {
     func yValueForBarChart(for barNumber: Int) -> [Double] {
         var array = [Double]()
         for _ in 0...20 {
-            array.append(Double.random(in: 0.0..<200.0))
+            array.append(Double(Int.random(in: 0..<200)))
         }
         return array
     }
