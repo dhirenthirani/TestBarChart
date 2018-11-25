@@ -199,14 +199,40 @@ class BarChart: UIView {
                 layer.shadowRadius = 0
                 layer.shadowOpacity = 0
                 layer.setValue(value, forKey: "data")
-                self.graphView?.layer.addSublayer(layer)
+
+                CATransaction.begin()
                 
+                let animation1 = CABasicAnimation(keyPath: "bounds.size.height")
+                animation1.fromValue = 0
+                animation1.toValue = endPoint.y
+                
+                let animation = CABasicAnimation(keyPath: "fillColor")
+                animation.fromValue = UIColor.clear.cgColor
+                animation.toValue = chart.barColor?.cgColor
+                
+                let animation2 = CABasicAnimation(keyPath: "path")
+                animation.fromValue = startPoint
+                animation.toValue = endPoint
+                
+                let group = CAAnimationGroup()
+                group.animations = [animation, animation1, animation2]
+                group.duration = 1
+                group.fillMode = .both
+                group.isRemovedOnCompletion = false
+                group.beginTime = CACurrentMediaTime()
+                group.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                layer.add(group, forKey: "animate")
+                
+                CATransaction.commit()
+                
+                self.graphView?.layer.addSublayer(layer)
                 i = i + 1.0
             }
             
             totalBarWidth = totalBarWidth + barWidth
         }
     }
+
     
     private func drawLineForGrid(startPoint: CGPoint, endPoint: CGPoint, text: String, textFrame: CGRect, shouldDraw: Bool = true) {
         if shouldDraw {
