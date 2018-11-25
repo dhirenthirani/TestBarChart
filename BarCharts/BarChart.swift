@@ -17,7 +17,7 @@ protocol BarChartDataSource: NSObjectProtocol {
     func yValueForBarChart(for barNumber: Int) -> [Double]
 }
 
-private class BarChartDataRenderer: NSObject {
+class BarChartDataRenderer: NSObject {
     var barColor: UIColor?
     var barWidth: Double?
     var yAxisData: [Double]?
@@ -47,6 +47,7 @@ class BarChart: UIView {
     
     private var scrollView: CustomScrollView?
     private var graphView: UIView?
+    private var legend: LegendView?
     
     private var touchedLayer: CAShapeLayer?
     private var dataShapeLayer: CAShapeLayer?
@@ -98,7 +99,11 @@ class BarChart: UIView {
         self.getDataFromDataSource()
         
         let width: Double = Double(self.frame.width)
-        let height: Double = Double(self.frame.height)
+        var height: Double = Double(self.frame.height)
+        
+        let legendHeight = LegendView.getHeight(charts: chartData)
+        
+        height = height - Double(legendHeight)
         
         self.scrollView = CustomScrollView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         self.scrollView?.showsVerticalScrollIndicator = false
@@ -120,16 +125,18 @@ class BarChart: UIView {
         createYAxisLine()
         createBarGraph()
         
-        
-        self.graphView?.setNeedsDisplay()
-        self.addSubview(self.graphView!)
         self.scrollView?.addSubview(self.graphView!)
-        self.scrollView?.setNeedsDisplay()
-
+        
         self.addSubview(self.scrollView!)
-
         self.scrollView?.contentSize = CGSize(width: graphWidth + width, height: Double(height))
-        self.setNeedsDisplay()
+        
+        self.createLegendView(height: legendHeight)
+    }
+    
+    private func createLegendView(height: CGFloat) {
+        self.legend = LegendView(frame: CGRect(x: 0, y: (scrollView?.frame.height ?? 0 ) + (scrollView?.frame.origin.y ?? 0), width: self.frame.size.width, height: height))
+        self.legend?.createLegend(charts: chartData)
+        self.addSubview(self.legend!)
     }
     
     private func createXAxisLine() {
